@@ -58,21 +58,21 @@ class Logger:
 
 	def debug(self, s):
 		if self.log_level <= self.LOG_LEVEL['debug']:
-			self.write("Debug: " + s, self.COLOR_DEBUG, sys.stdout)
+			self.write("Debug: ", s, self.COLOR_DEBUG, sys.stdout)
 
 	def info(self, s):
 		if self.log_level <= self.LOG_LEVEL['info']:
-			self.write("Info: " + s, self.COLOR_INFO, sys.stdout)
+			self.write("Info: ", s, self.COLOR_INFO, sys.stdout)
 
 	def warn(self, s):
 		if self.log_level <= self.LOG_LEVEL['warn']:
-			self.write("Warn: " + s, self.COLOR_WARN, sys.stderr)
+			self.write("Warn: ", s, self.COLOR_WARN, sys.stderr)
 
 	def error(self, s):
 		if self.log_level <= self.LOG_LEVEL['error']:
-			self.write("Error: " + s, self.COLOR_ERROR, sys.stderr)
+			self.write("Error: ", s, self.COLOR_ERROR, sys.stderr)
 
-	def write(self, string, color=None, stream=sys.stdout):
+	def write(self, prefix, value, color=None, stream=sys.stdout):
 		# Check Color Support
 		if stream == sys.stdout and not self.stdout_color:
 			color = None
@@ -81,8 +81,9 @@ class Logger:
 		# Print Color
 		if color != None:
 			stream.write(color)
-		# Print String
-		stream.write(string)
+		# Print Value
+		stream.write(prefix)
+		stream.write(str(value))
 		# End Color
 		if color != None:
 			stream.write(self.COLOR_END)
