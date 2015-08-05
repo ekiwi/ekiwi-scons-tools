@@ -56,7 +56,7 @@ def template_action(target, source, env):
 	# Jinja2 Line Statements
 	jinja_env.line_statement_prefix = '%%'
 	jinja_env.line_comment_prefix = '%#'
-	template = loader.get_template(filename)
+	template = jinja_env.get_template(filename)
 	output = template.render(env['substitutions']).encode('utf-8')
 	with open(target[0].path, 'w') as out_file:
 		out_file.write(output)
