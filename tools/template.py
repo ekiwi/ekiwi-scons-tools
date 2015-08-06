@@ -53,6 +53,10 @@ def template_action(target, source, env):
 	# even on windows
 	filename = filename.replace('\\', '/')
 	jinja_env = RelEnvironment(loader=jinja2.FileSystemLoader(path))
+	jinja_env.filters = dict(
+		jinja_env.filters.items() + env['EKIWI_TEMPLATE_FILTERS'].items())
+	jinja_env.tests = dict(
+		jinja_env.tests.items() + env['EKIWI_TEMPLATE_TESTS'].items())
 	# Jinja2 Line Statements
 	jinja_env.line_statement_prefix = '%%'
 	jinja_env.line_comment_prefix = '%#'
@@ -101,6 +105,13 @@ def in_include_scanner(node, env, path, arg=None):
 	dependencies.remove(targetFilename)
 	return dependencies
 
+def template_add_test(env, test_name, test_function):
+	env['EKIWI_TEMPLATE_TESTS'][test_name] = test_function
+
+def template_add_filter(env, filter_name, filter_function):
+	env['EKIWI_TEMPLATE_FILTERS'][filter_name] = filter_function
+
+
 def generate(env):
 	# Template Builder
 	template_builder = SCons.Builder.Builder(
@@ -113,6 +124,11 @@ def generate(env):
 		target_factory = SCons.Node.FS.File,
 		source_factory = SCons.Node.FS.File)
 	env.Append(BUILDERS = { 'Template': template_builder })
+
+	env['EKIWI_TEMPLATE_TESTS'] = {}
+	env.AddMethod(template_add_test, 'AddTemplateTest')
+	env['EKIWI_TEMPLATE_FILTERS'] = {}
+	env.AddMethod(template_add_filter, 'AddTemplateFilter')
 
 def exists(env):
 	return 1
