@@ -130,5 +130,9 @@ def generate(env):
 	env['EKIWI_TEMPLATE_FILTERS'] = {}
 	env.AddMethod(template_add_filter, 'AddTemplateFilter')
 
+	def filter_indent(value, level=0):
+		return ('\n' + '\t' * level).join(value.split('\n'))
+	env.AddTemplateFilter("indent", filter_indent)
+
 def exists(env):
 	return 1
